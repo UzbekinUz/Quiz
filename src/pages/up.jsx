@@ -7,20 +7,18 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 const style = "w-[300px] h-[45px] px-6 pr-10 my-4 outline-none bg-[#cdcaca64]";
-function Up({ setType , setRefresh, refresh }) {
+function Up({ setType }) {
   const [state, setState] = useState({});
   const navigate = useNavigate()
   function Submit() {
     axios.post(`http://localhost:5000/api/auth/signup`, state).then((res) => {
       const { success, message, access_token } = res.data;
-      console.log(res.data);
       if (!success) {
         toast.error(message);
       } else {
         toast.success(message);
         localStorage.setItem("access_token", access_token);
         setTimeout(() => {
-            setRefresh(!refresh)
             navigate('/')
         }, 1500);
       }
@@ -38,22 +36,11 @@ function Up({ setType , setRefresh, refresh }) {
         <div className="flex relative justify-center items-center p-0 ">
           <input
             type="text"
-            placeholder="To'liq ismingiz"
+            placeholder="Username kiriting..."
             className={style}
-            onChange={(e) => setState({ ...state, full_name: e.target.value })}
+            onChange={(e) => setState({ ...state, userName: e.target.value })}
           />
           <i className="fas fa-user absolute right-5"></i>
-        </div>
-        <div className="flex relative justify-center items-center p-0 ">
-          <input
-            type="tel"
-            placeholder="Reqamingiz"
-            className={style}
-            onChange={(e) =>
-              setState({ ...state, phone_number: e.target.value })
-            }
-          />
-          <i className="fas fa-phone absolute right-5"></i>
         </div>
         <div className="flex relative justify-center items-center p-0 ">
           <input

@@ -5,6 +5,7 @@ import Home from "./pages/home";
 import Register from "./pages/register";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 function Main() {
   const [refresh, setRefresh] = useState(false);
@@ -34,6 +35,12 @@ function Main() {
         <Route element={<Home />} path="/"/>
         <Route element={<Register />} path="/autorization" />
       </Routes>
+      <ToastContainer
+        position="top-center"
+        autoClose={1500}
+        closeButton={false}
+        style={{ zIndex: "99999999999" }}
+      />
       <Footer />
     </>
   );

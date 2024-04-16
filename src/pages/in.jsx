@@ -5,10 +5,10 @@ import { useState } from "react";
 import axios from "axios";
 // import { API_LINK } from "../cfg";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 const style =
   "w-[300px] h-[45px] px-6 pr-10 my-4 outline-none bg-[#383838ef] text-[white]";
-function In({ setType, setRefresh, refresh }) {
+function In({ setType }) {
   const [state, setState] = useState({});
   const navigate = useNavigate();
   function Submit() {
