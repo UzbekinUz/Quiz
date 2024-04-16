@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
             message: "Avtorizatsiyada xatolik!"
         })
     } else {
-        const token = authorization.replace('Saidnet ', '')
+        const token = authorization.replace('DynamoCom ', '')
         require('jsonwebtoken').verify(token, process.env.JWT_SECRET, (error, payload) => {
             if (error) {
                 res.send({
@@ -33,7 +33,7 @@ module.exports = (req, res, next) => {
                             message: "Avtorizatsiya muddati tugagan! Qayta avtorizatsiyada qiling!"
                         })
                     } else {
-                        req.user = {name, userName, isAdmin } = result;
+                        req.user = { userName, password } = result;
                         next();
                     }
                 })
