@@ -1,43 +1,49 @@
-const userModel = require('../models/userModel');
-
+const JWT = require('jsonwebtoken');
+const userModel = require('../models/authModel');
 module.exports = (req, res, next) => {
-    const { authorization } = req.headers;
-    if (!authorization) {
+    const token = req.headers['x-auth-token'];
+    if (!token) {
         res.send({
             success: false,
-            message: "Avtorizatsiya qiling!"
-        })
-    } else if (!authorization.includes('Saidnet ')) {
-        res.send({
-            success: false,
-            message: "Avtorizatsiyada xatolik!"
-        })
+            message: req.headers
+        });
     } else {
-        const token = authorization.replace('DynamoCom ', '')
-        require('jsonwebtoken').verify(token, process.env.JWT_SECRET, (error, payload) => {
-            if (error) {
+        JWT.verify(token, process.env.JWT_SECRET, async (err, payload) => {
+            if (err) {
                 res.send({
                     success: false,
-                    message: "Qayta avtorizatsiya qiling!"
-                })
+                    message: "Sessiya vaqti tugagan! Qayta avtorizatsiya qiling!"
+                });
             } else {
-                userModel.findOne({ _id: payload.userId }).then(result => {
-                    if (!result) {
+                const { userId } = payload;
+                if (!userId) {
+                    res.send({
+                        success: false,
+                        message: "Hatolik. qayta avtorizatsiya qiling!"
+                    });
+                } else {
+                    const $user = await userModel.findOne({ _id: userId });
+                    
+                    if (!$user) {
                         res.send({
                             success: false,
-                            message: "Xatolik! Qayta avtorizatsiyada qiling!"
-                        })
-                    } else if (result.session_key !== token) {
+                            message: "Hatolik. Foydalanuvchi profili o'chirilgan!"
+                        });
+                    } else if ($user.access_token !== token) {
                         res.send({
                             success: false,
-                            message: "Avtorizatsiya muddati tugagan! Qayta avtorizatsiyada qiling!"
-                        })
+                            message: $user,
+                            token,
+                            token2:$user.access_token
+                        });
                     } else {
-                        req.user = { userName, password } = result;
+                        const { userName, password } = $user;
+
+                        req.user = {userName, password };
                         next();
                     }
-                })
+                }
             }
-        })
+        });
     }
 }

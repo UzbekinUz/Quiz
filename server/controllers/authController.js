@@ -22,7 +22,7 @@ module.exports = {
                             success: false,
                             message: "Parol kamida 6ta belgidan iborat bo'lsin!"
                         });
-                    } else if (password === repassword) {
+                    } else if (password !== repassword) {
                         res.send({
                             success: false,
                             message: "Parollarni bir xillika keltiring!"
@@ -34,7 +34,7 @@ module.exports = {
                         }).save().then(() => {
                             res.send({
                                 success: true,
-                                message: "Yakunlandi ✔️!"
+                                message: "✔️ Yakunlandi "
                             })
                         })
                     }
@@ -62,7 +62,7 @@ module.exports = {
                     const access_token = require('jsonwebtoken').sign({ userId: result._id }, process.env.JWT_SECRET, { expiresIn: '3d' })
                     userModel.findOneAndUpdate(
                         { _id: result._id },
-                        { session_key: access_token },
+                        { access_token },
                         { new: true, runValidators: true, upsert: true },
                         () => {
                             res.send({
